@@ -1,0 +1,2 @@
+g++ -O2 -fno-pie -no-pie tb.S -o tb
+taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./tb

@@ -1,0 +1,12 @@
+gcc -O2 -fno-pie -no-pie -nostdlib -nostartfiles \
+  -Wl,-T,two_text_segments.ld -Wl,--build-id=none \
+  -Wl,--gc-sections \
+  -o bench_linker start_and_sites.S
+
+
+
+
+readelf -h bench_linker | egrep 'Type:|Entry'
+readelf -lW bench_linker | egrep 'LOAD|Entry'
+readelf -sW bench_linker | egrep 'site_A|site_B|_start'
+./bench_linker

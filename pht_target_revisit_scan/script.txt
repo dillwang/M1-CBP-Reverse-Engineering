@@ -1,0 +1,3 @@
+gcc -nostdlib -nostartfiles -ffreestanding -fno-pie -no-pie     -Wl,-Tlinker.ld -Wl,--build-id=none     -o tb tb.S
+nm -n tb | grep -E '(_start|L_target_clear|L_jump_clear|Train_Branch|Label_Test1|Label_Test2|lbl_tr|lbl_ts1|lbl_ts2)'
+taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./tb

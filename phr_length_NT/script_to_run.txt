@@ -1,0 +1,9 @@
+python3 gen_phr_dummy_nt.py > phr_dummy.inc
+
+
+gcc -c phr_test_a64.S
+gcc -O2 -c phr_tb.c
+gcc -o phr_test_nt phr_tb.o phr_test_a64.o
+
+
+taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./phr_test_nt 20000000 250

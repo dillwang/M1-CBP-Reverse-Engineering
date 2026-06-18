@@ -1,0 +1,4 @@
+
+# Generated binaries and object files
+NOP_test/bench_nopalign
+NOP_test/*.o

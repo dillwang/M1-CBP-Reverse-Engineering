@@ -1,0 +1,7 @@
+gcc -nostdlib -nostartfiles -ffreestanding -fno-pie -no-pie   -Wl,-Tlinker.ld -Wl,--build-id=none   -o pht_tb tb_full.S
+
+nm -n pht_tb | grep -E '(_start|func_set_phr|branch1|branch2)'
+
+taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./pht_tb
+
+taskset -c 4 perf record -c 10 -e apple_firestorm_pmu/rc5/ ./pht_tb

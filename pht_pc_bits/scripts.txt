@@ -1,0 +1,5 @@
+chmod +x build_align.sh
+
+./build_align.sh 4 20
+
+taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./firestorm_pht_align_a16 98 2000000 1

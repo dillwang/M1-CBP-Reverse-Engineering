@@ -1,0 +1,6 @@
+gcc -O2 tb.c tb.S -o firestorm_phr_tb
+
+for b in $(seq 2 20); do
+  echo "bit=$b"
+  taskset -c 4 perf stat -e apple_firestorm_pmu/rc5/ ./firestorm_phr_tb $b 0 2000000
+done

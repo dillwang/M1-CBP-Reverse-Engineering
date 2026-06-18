@@ -1,0 +1,150 @@
+for (1000000 times) {
+    k = rand()
+    call branch1
+    call branch2
+}
+-----------------------------------------------
+func_set_phr_pc:
+jmp label1
+label1: jmp label2
+label2: jmp label3
+...
+labeli: jmp labeli+1
+ret
+ 
+func_set_phr_target:
+jmp label1
+label1: jmp label2
+label2: jmp label3
+...
+labeli: jmp labeli+1
+ret
+ 
+SECTION1: PC = 100...000 (the number of 0s = i)
+branch1:
+call func_set_phr_pc
+call func_set_phr_target
+PHR_PC = 0...0
+PHR_T = k0...0
+call branch1.2
+ret
+ 
+SECTION1.2: PC = 100...000 (the number of 0s = i)
+branch1.2:
+je
+ret
+ 
+SECTION2: PC = 100...000 (the number of 0s = i)
+branch2:
+call func_set_phr_pc
+call func_set_phr_target
+PHR_PC = 0...0
+PHR_T = k0...0
+call branch2.2
+ret
+ 
+SECTION2.2: PC = 100...000 (the number of 0s = i)
+branch2.2:
+jne
+ret
+
+
+--------------------------------------------------------------------------------------------
+
+for (1000000 times) {
+    k = rand()
+    call branch1
+    call branch2
+}
+
+--------------------------------------------------------------------------------------------
+func_set_phr:
+jmp label1
+label1: jmp label2
+label2: jmp label3
+...
+label96:
+ret
+ 
+SECTION1: PC = 100...000 (the number of 0s = i, lower 32 bits must also be identical)
+branch1:
+je k
+call func_set_phr
+PHR_PC = x...x (random but constant)
+PHR_T = kx...x (random but constant)
+call branch1.2
+ret
+ 
+SECTION1.2: PC = 100...000 (the number of 0s = i, lower 32 bits must also be identical) x00000..0
+branch1.2:
+je k
+ret
+ 
+SECTION2: PC = 100...000 (the number of 0s = i)
+branch2:
+je k
+call func_set_phr
+PHR_PC = x...x (random but constant)
+PHR_T = kx...x (random but constant)
+call branch2.2
+ret
+ 
+SECTION2.2: PC = 100...000 (the number of 0s = i, lower 32 bits must also be identical) x10000..0
+branch2.2:
+nops (2^18 # of alignment)
+jne k
+ret
+
+
+
+--------------------------------------------------------------------------------------------
+for (1000000 times) {
+    k = rand()
+    call branch1
+    call branch2
+}
+
+--------------------------------------------------------------------------------------------
+func_set_phr:
+je L0 if k(conditional)
+jne L1 if k(conditional)
+L0: goto label 1 // differs at bit 2 (inject 1)
+L1: goto label 1 // differs at bit 2 (inject 0)
+label1: jmp label2
+label2: jmp label3
+...
+label96: jmp label97
+label97: jmp label98
+label98
+ret
+ 
+SECTION1: PC = 100...000 (lower 32 bits aligned and all = 0s)
+branch1:
+call func_set_phr
+// PHR_PC = x...x (random but constant)
+// PHR_T = kx...x (random but constant)
+.p2align i
+je k (train branch)
+L0:
+ret
+ 
+SECTION2: PC = 100...000 (lower 32 bits aligned and all = 0s)
+branch2:
+call func_set_phr
+// PHR_PC = x...x (random but constant)
+// PHR_T = kx...x (random but constant)
+nops (alignment i bits) scan from 0-20 bits
+jne k (test branch)
+L0:
+ret
+
+
+
+--------------------------------------------------------------------------------------------
+for (1000000 times) {
+    k = rand()
+    func_set_phr(k)
+    see if func_set_phr worked?
+}
+
+--------------------------------------------------------------------------------------------
