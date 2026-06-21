@@ -18,5 +18,4 @@ SECTIONS
     .text.uncond_jumps 0x600000 : {
         *(.text.uncond_jumps)
     }
-
 }

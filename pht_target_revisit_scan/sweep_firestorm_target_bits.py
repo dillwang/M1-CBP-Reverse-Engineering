@@ -1,36 +1,10 @@
 #!/usr/bin/env python3
 """
-Sweep AArch64 branch-alignment bits and unconditional-jump count, then build/run/plot.
-
-What this does
---------------
-For each pair:
-  - align_bits in [ALIGN_MIN, ALIGN_MAX]
-  - num_jumps  in [JUMP_MIN, JUMP_MAX]
-
-it generates a standalone AArch64 assembly file where the three `.p2align`
-sites all use `align_bits`, and the dummy unconditional-jump chain contains
-exactly `num_jumps` executed `b` instructions before `ret`.
-
-It then:
-  1. compiles the program with your linker script,
-  2. runs it under perf stat,
-  3. parses apple_firestorm_pmu/rc5/,
-  4. writes a CSV,
-  5. draws a heatmap.
-
-Typical usage
--------------
 python3 sweep_firestorm_target_bits.py \
     --linker linker.ld \
     --core 4 \
     --event apple_firestorm_pmu/rc5/ \
     --outdir sweep_out
-
-Notes
------
-- This script assumes you are running on your Linux/Asahi box with `gcc`, `perf`,
-  and `taskset` available.
 - The default x-axis sweep is 67..100 inclusive.
 - The default y-axis sweep is 2..19 inclusive.
 - If you want 67..101 instead, pass `--jump-max 101`.
@@ -146,8 +120,6 @@ ASM_FOOTER = "\n"
 
 def generate_jump_chain(num_jumps: int) -> str:
     """
-    Generate exactly `num_jumps` executed unconditional `b` instructions,
-    followed by `ret`.
 
     Example for num_jumps=3:
         b uj_001
@@ -188,11 +160,6 @@ def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subp
 def parse_perf_count(stderr_text: str, event_name: str) -> int:
     """
     Parse `perf stat -x,` output.
-    A typical line looks roughly like:
-        12345,,,apple_firestorm_pmu/rc5/,123456,100.00,,
-    or sometimes:
-        12345,      ,apple_firestorm_pmu/rc5/,...
-    We just look for a CSV line containing the event name and take the first field.
     """
     for line in stderr_text.splitlines():
         if event_name in line:
