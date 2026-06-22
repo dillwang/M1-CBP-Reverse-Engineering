@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-"""
-Plot manually collected pht_pc_bits data.
-
-Expected CSV columns:
-    A,dummyN,iters,seed,rc5,notes
-
-Only A and rc5 are required. If the CSV has no iters column, pass --iters.
-
-Examples:
-    python3 plot_pht_pc_bits.py pht_pc_bits_points.csv --outdir plots
-    python3 plot_pht_pc_bits.py pht_pc_bits_points.csv --iters 2000000 --baseline auto --outdir plots
-    python3 plot_pht_pc_bits.py --make-template pht_pc_bits_points_template.csv
-"""
 
 from __future__ import annotations
 
@@ -42,7 +29,6 @@ def first_existing(columns: Iterable[str], aliases: Iterable[str]) -> str | None
 
 
 def clean_count(value) -> float:
-    """Convert perf-style strings like '1,234,567' or '1.234.567' to float."""
     if pd.isna(value):
         raise ValueError("missing count")
     text = str(value).strip()

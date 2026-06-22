@@ -1,0 +1,1 @@
+A manual version of pht_assciativity test bench. Refer to pht_associativity_scan or pht_associativity_reverse for full scan result.
