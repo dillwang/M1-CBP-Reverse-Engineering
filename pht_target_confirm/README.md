@@ -1,0 +1,1 @@
+Manual testing. Please refer to pht_target_revisit_scan for full scanning.
