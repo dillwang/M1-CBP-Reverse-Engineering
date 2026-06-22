@@ -1,22 +1,3 @@
-// tb.S
-// Minimal AArch64 GAS microbenchmark
-//
-// Structure:
-//   for 100000 iterations:
-//       k = xorshift32() & 1
-//       cmp k, 1
-//       b.eq L0
-//       .p2align ...
-//       b.ne L0
-//   L0:
-//       30 dummy unconditional jumps
-//       b.ne probe_tgt     // same flags from cmp
-//
-// Build:
-//   gcc -nostdlib -nostartfiles -ffreestanding -Wl,--build-id=none -o tb tb.S
-//
-// Run:
-//   taskset -c 4 perf stat -e apple_firestorm_pmu/<event>/ ./tb
 
     .text
     .arch armv8-a

@@ -4,15 +4,12 @@
 .type   dummy_chain, %function
 .equ MAX_DUMMY, 256
 
-// void dummy_chain(long n)
-// x0 = n (0..MAX_DUMMY)
 dummy_chain:
     // clamp n
     cmp x0, #MAX_DUMMY
     b.ls 1f
     mov x0, #MAX_DUMMY
 1:
-    // jump via table
     adrp x1, dummy_jumptable
     add  x1, x1, :lo12:dummy_jumptable
     ldr  x2, [x1, x0, lsl #3]
